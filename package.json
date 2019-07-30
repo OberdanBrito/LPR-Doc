@@ -1,0 +1,35 @@
+{
+  "name": "lpr-doc",
+  "version": "1.0.0",
+  "dependencies": {},
+  "description": "LPR Doc Serviço de armazenamento de placas identificadas através o OpenAlpr",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OberdanBrito/LPR-Doc.git"
+  },
+  "keywords": [
+    "LPR",
+    "Craos",
+    "Verticals",
+    "Tecnologia",
+    "Identificação",
+    "Controle",
+    "de",
+    "acesso",
+    "Autormação",
+    "Veículos",
+    "Placas",
+    "Acesso",
+    "automático"
+  ],
+  "author": "Oberdan Brito",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OberdanBrito/LPR-Doc/issues"
+  },
+  "homepage": "https://github.com/OberdanBrito/LPR-Doc#readme"
+}
