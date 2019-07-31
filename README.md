@@ -1,7 +1,7 @@
 # LPR-Doc
 LPR Doc Serviço de armazenamento de placas identificadas através o 
 
-Serviços desenvolvidos neste projeto 
+**Serviços desenvolvidos neste projeto**
 
 🚀 serviço do Linux usando o systemd 
 🚀 Armazenamento do log de passagem no banco de dados PostgreSQL 
