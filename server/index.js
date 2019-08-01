@@ -16,6 +16,7 @@ const db = require('knex')({
     client: 'pg',
     connection: {
         host: process.env.PG_HOST,
+        port: process.env.PG_PORT,
         user: process.env.PG_USER,
         password: process.env.PG_PASSWORD,
         database: process.env.PG_DATABASE
@@ -28,7 +29,7 @@ app.listen(port, () => {
 
 const WebSocket = require('ws');
 
-const wss = new WebSocket.Server({ port: 3000 });
+const wss = new WebSocket.Server({ port: process.env.WS_PORT });
 
 wss.on('connection', function connection(ws) {
     ws.on('message', function incoming(data) {
