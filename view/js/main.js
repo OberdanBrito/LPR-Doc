@@ -58,14 +58,13 @@ dhtmlxEvent(window, "load", function () {
         hist.push(data);
         list.add(data, 0);
 
-        //layout.cells('b').attachURL(data.uuid);
+        layout.cells('b').attachURL('../storage/'+data.uuid);
 
         list.attachEvent("onItemClick", function (id){
-            let item = hist.filter(function (item) {
+            hist.filter(function (item) {
                 if (item.id === id)
-                    return item;
+                    layout.cells('b').attachURL(item.uuid);
             });
-            layout.cells('b').attachURL(item[0].uuid);
             return true;
         });
 
