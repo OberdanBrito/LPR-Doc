@@ -29,7 +29,7 @@ dhtmlxEvent(window, "load", function () {
     let list = layout.cells('a').attachList({
         container: "data_container",
         type: {
-            template: "<b>Placa:</b> #placa#<br/><b>Nível de confiança:</b> #nivel_confianca#",
+            template: "<b>Data:</b>#filedate# <br/><b>Câmera:</b>#camera_id# <br/><b>Placa:</b> #plate#<br/><b>Nível de confiança:</b> #confidence#",
             height: 'auto'
         }
     });
@@ -53,12 +53,12 @@ dhtmlxEvent(window, "load", function () {
         if (event.type !== 'message')
             return;
 
-        let novaplaca = JSON.parse(JSON.parse(event.data).data.text.replace(/&quot;/g, '"'));
+        let data = JSON.parse(event.data);
 
-        hist.push(novaplaca);
-        list.add(novaplaca, 0);
+        hist.push(data);
+        list.add(data, 0);
 
-        layout.cells('b').attachURL(novaplaca.uuid);
+        //layout.cells('b').attachURL(data.uuid);
 
         list.attachEvent("onItemClick", function (id){
             let item = hist.filter(function (item) {
@@ -68,8 +68,6 @@ dhtmlxEvent(window, "load", function () {
             layout.cells('b').attachURL(item[0].uuid);
             return true;
         });
-
-        console.debug(novaplaca);
 
     };
 
