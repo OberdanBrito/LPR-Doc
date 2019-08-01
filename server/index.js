@@ -1,4 +1,4 @@
-require('custom-env').env('staging');
+require('custom-env').env();
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -29,7 +29,7 @@ app.listen(port, () => {
 
 const WebSocket = require('ws');
 
-const wss = new WebSocket.Server({ port: process.env.WS_PORT });
+const wss = new WebSocket.Server({port: process.env.WS_PORT});
 
 wss.on('connection', function connection(ws) {
     ws.on('message', function incoming(data) {
@@ -60,12 +60,14 @@ app.post('/', (request, response) => {
     }
     console.log(cor, 'camera_id:' + request.body.camera_id + ' ' + results.plate + ' ' + results.confidence);
     wss.clients.forEach(function (client) {
-       client.send(JSON.stringify({
-           filedate: new Date().toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"}),
-           camera_id: request.body.camera_id,
-           plate: results.plate,
-           confidence:results.confidence
-       }));
+        client.send(JSON.stringify({
+            id: request.body.epoch_time,
+            filedate: new Date().toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"}),
+            camera_id: request.body.camera_id,
+            plate: results.plate,
+            confidence: results.confidence,
+            uuid:request.body.uuid
+        }));
     });
 
     let trace = request.body;
@@ -83,5 +85,3 @@ app.post('/', (request, response) => {
 
 
 });
-
-let t = {"version":2,"data_type":"alpr_results","epoch_time":1564684472088,"img_width":1280,"img_height":720,"processing_time_ms":316.861176,"regions_of_interest":[],"results":[{"plate":"G8U8266","confidence":88.541321,"matches_template":0,"plate_index":0,"region":"br","region_confidence":0,"processing_time_ms":24.387512,"requested_topn":1,"coordinates":[{"x":563,"y":78},{"x":717,"y":74},{"x":719,"y":121},{"x":566,"y":125}],"candidates":[{"plate":"G8U8266","confidence":88.541321,"matches_template":0}]}],"uuid":"p1-cam1-1564684472408","camera_id":1,"site_id":"p1","company_id":"craos"}
