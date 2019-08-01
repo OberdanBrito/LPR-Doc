@@ -8,3 +8,8 @@ LPR Doc Serviço de armazenamento de placas identificadas através o
  - Envio Websocket
  - Pesquisa de veículos na base de dados
  - 👍 GUI para visualização em tempo real das passagens veiculares
+
+
+Dependências
+
+ - [Craos Smart Framework](https://github.com/Craos/smart.git)
