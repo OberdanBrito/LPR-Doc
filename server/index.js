@@ -43,6 +43,7 @@ wss.on('connection', function connection(ws) {
 
 app.post('/', (request, response) => {
 
+    console.debug(request.body);
     response.status(200).send();
 
     let results = request.body.results[0];
