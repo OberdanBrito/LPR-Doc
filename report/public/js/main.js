@@ -1,8 +1,6 @@
 dhtmlxEvent(window, "load", function () {
 
-    let hist = [];
-
-    let layout = new dhtmlXLayoutObject({
+    new dhtmlXLayoutObject({
         parent: document.body,
         pattern: '2U',
         offsets: {
@@ -26,4 +24,15 @@ dhtmlxEvent(window, "load", function () {
         ]
     });
 
+    $.ajax({
+        url: 'http://localhost:9002/teste',
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            console.debug(response);
+        },
+        error: function (request, status, error) {
+            console.error(request, status, error)
+        }
+    });
 });
