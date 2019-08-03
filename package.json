@@ -1,17 +1,18 @@
 {
-  "name": "lpr-doc",
+  "name": "lprdoc",
   "version": "1.0.0",
+  "description": "Diretorio de servicos LPR",
+  "main": "index.js",
   "dependencies": {
     "body-parser": "latest",
     "custom-env": "^1.0.2",
     "express": "^4.17.1",
     "knex": "^0.19.1",
     "pg": "^7.12.0",
+    "serve-favicon": "^2.5.0",
     "sqlite3": "^4.0.9",
     "ws": "^7.1.1"
   },
-  "description": "LPR Doc Serviço de armazenamento de placas identificadas através o OpenAlpr",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,19 +22,15 @@
   },
   "keywords": [
     "LPR",
+    "OpenALPR",
     "Craos",
-    "Verticals",
-    "Tecnologia",
-    "Identificação",
-    "Controle",
-    "acesso",
-    "Autormação",
-    "Veículos",
-    "Placas",
+    "Control",
+    "de",
     "Acesso",
-    "automático"
+    "Placas",
+    "Veiculos"
   ],
-  "author": "Oberdan Brito",
+  "author": "Oberdan",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/OberdanBrito/LPR-Doc/issues"

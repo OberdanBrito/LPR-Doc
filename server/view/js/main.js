@@ -1,8 +1,7 @@
 dhtmlxEvent(window, "load", function () {
 
-    let hist = [];
-
-    let layout = new dhtmlXLayoutObject({
+    // noinspection JSMismatchedCollectionQueryUpdate
+    let hist = [], layout = new dhtmlXLayoutObject({
         parent: document.body,
         pattern: '2U',
         offsets: {
@@ -24,27 +23,23 @@ dhtmlxEvent(window, "load", function () {
                 header: true
             }
         ]
-    });
-
-    let list = layout.cells('a').attachList({
+    }), list = layout.cells('a').attachList({
         container: "data_container",
         type: {
             template: "<b>Data:</b>#filedate# <br/><b>Câmera:</b>#camera_id# <br/><b>Placa:</b> #plate#<br/><b>Nível de confiança:</b> #confidence#",
             height: 'auto'
         }
-    });
-
-    let wss = new WebSocket('ws://localhost:3000/');
+    }), wss = new WebSocket('ws://localhost:3000/');
 
     wss.onopen = function (event) {
         console.info('Websocket aberto com sucesso!', event);
     };
 
-    wss.onclose = function(event) {
+    wss.onclose = function (event) {
         console.warn('Atenção o websocket está fechado', event);
     };
 
-    wss.onerror = function(event) {
+    wss.onerror = function (event) {
         console.error('Erro websocket:', event);
     };
 
@@ -58,12 +53,12 @@ dhtmlxEvent(window, "load", function () {
         hist.push(data);
         list.add(data, 0);
 
-        layout.cells('b').attachURL('../storage/'+data.uuid);
+        layout.cells('b').attachURL('../storage/' + data.uuid, false, false);
 
-        list.attachEvent("onItemClick", function (id){
+        list.attachEvent("onItemClick", function (id) {
             hist.filter(function (item) {
                 if (item.id === id)
-                    layout.cells('b').attachURL(item.uuid);
+                    layout.cells('b').attachURL(item.uuid, false, false);
             });
             return true;
         });
