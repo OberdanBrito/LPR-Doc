@@ -15,15 +15,15 @@ cp -fv ./alprd.conf /etc/openalpr/
 cp -fv ./openalpr.conf /etc/openalpr/
 
 #Registro do servico de captura para o banco de dados
-cp -fv ./lprserver.service /etc/systemd/system/lprserver.service
+cp -fv ./lprtrace.service /etc/systemd/system/lprtrace.service
 
-chmod 644 /etc/systemd/system/lprserver.service
+chmod 644 /etc/systemd/system/lprtrace.service
 
-#Habilita o servico symlink from /etc/systemd/system/multi-user.target.wants/lprserver.service to /etc/systemd/system/lprserver.service.
-systemctl enable lprserver.service
+#Habilita o servico
+systemctl enable lprtrace.service
 
 #Inicia o servico
-systemctl start lprserver.service
+systemctl start lprtrace.service
 
 #Verifica o PID do servico
 ps -ef | grep index.js

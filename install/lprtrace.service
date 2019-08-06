@@ -1,20 +1,20 @@
 [Unit]
-Description=Iniciando a captura do servico OpenAlpr no banco de dados
+Description=Iniciando a captura do servico LPR Trace
 
 # Requires the mysql service to run first
 #Requires=After=mysql.service
 
 [Service]
-ExecStart=node /var/www/html/lprdoc/server/index.js
+ExecStart=node /var/www/html/lprdoc/trace/index.js
 # Required on some systems
-WorkingDirectory=/var/www/html/lprdoc/server/
+WorkingDirectory=/var/www/html/lprdoc/trace/
 Restart=always
 # Restart service after 10 seconds if node service crashes
 RestartSec=10
 # Output to syslog
 StandardOutput=syslog
 StandardError=syslog
-SyslogIdentifier=lprserver
+SyslogIdentifier=lprtrace
 #User=<alternate user>
 #Group=<alternate group>
 Environment=NODE_ENV=production PORT=1337
