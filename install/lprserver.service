@@ -1,11 +1,13 @@
 [Unit]
-Description=Iniciando a entrega de dados LPR
-#Requires=After=mysql.service       # Requires the mysql service to run first
+Description=Iniciando a captura do servico OpenAlpr no banco de dados
+
+# Requires the mysql service to run first
+#Requires=After=mysql.service
 
 [Service]
-ExecStart=/usr/bin/node /home/oberdan/lprserver/index.js
+ExecStart=node /var/www/html/lprdoc/server/index.js
 # Required on some systems
-#WorkingDirectory=/opt/nodeserver
+WorkingDirectory=/var/www/html/lprdoc/server/
 Restart=always
 # Restart service after 10 seconds if node service crashes
 RestartSec=10

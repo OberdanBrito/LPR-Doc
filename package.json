@@ -11,7 +11,8 @@
     "pg": "^7.12.0",
     "serve-favicon": "^2.5.0",
     "sqlite3": "^4.0.9",
-    "ws": "^7.1.1"
+    "ws": "^7.1.1",
+    "dotenv": "latest"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -35,5 +36,8 @@
   "bugs": {
     "url": "https://github.com/OberdanBrito/LPR-Doc/issues"
   },
-  "homepage": "https://github.com/OberdanBrito/LPR-Doc#readme"
+  "homepage": "https://github.com/OberdanBrito/LPR-Doc#readme",
+  "devDependencies": {
+    "@types/dotenv": "^6.1.1"
+  }
 }
