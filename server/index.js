@@ -13,13 +13,13 @@ app.use(
 );
 
 const db = require('knex')({
-    client: 'pg',
+    client: 'sqlite3',
     connection: {
-        host: process.env.PG_HOST,
-        port: process.env.PG_PORT,
-        user: process.env.PG_USER,
-        password: process.env.PG_PASSWORD,
-        database: process.env.PG_DATABASE
+        filename: process.env.SQ_FILENAME
+    },
+    useNullAsDefault: true,
+    log: {
+        warn:()=>{}
     }
 });
 
@@ -62,8 +62,7 @@ function insert_job(request) {
     delete job.results;
 
     db('job')
-        .insert(job)
-        .returning('id')
+        .insert(job, 'id')
         .then((result_job) => {
 
             let job_id = result_job[0];
@@ -94,8 +93,7 @@ function insert_results(request) {
     delete request.candidates;
 
     db('results')
-            .insert(request)
-            .returning('id')
+            .insert(request, 'id')
             .then((result) => {
 
                 let results_id = result[0];
@@ -117,8 +115,7 @@ function insert_results(request) {
 function insert_coordinates(coordinate) {
 
     db('coordinates')
-        .insert(coordinate)
-        .returning('id')
+        .insert(coordinate, 'id')
         .then((result) => {
             return result[0];
         });
@@ -128,8 +125,7 @@ function insert_coordinates(coordinate) {
 function insert_candidates(candidate) {
 
     db('candidates')
-        .insert(candidate)
-        .returning('id')
+        .insert(candidate, 'id')
         .then((result) => {
             return result[0];
         });
@@ -144,8 +140,7 @@ function insert_regions(regions) {
 
     regions.filter(function (item) {
         db('results')
-            .insert(item)
-            .returning('id')
+            .insert(item, 'id')
             .then((result) => {
                 return result[0];
             });
