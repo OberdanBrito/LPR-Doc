@@ -10,8 +10,8 @@ create table job
     processing_time_ms real,
     uuid varchar(50),
     camera_id integer,
-    site_id varchar(50),
-    company_id varchar(50)
+    site_id integer,
+    company_id integer
 );
 
 create unique index job_id_uindex

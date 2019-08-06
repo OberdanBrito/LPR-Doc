@@ -7,12 +7,12 @@
     "body-parser": "latest",
     "custom-env": "^1.0.2",
     "express": "^4.17.1",
+    "express-fileupload": "^1.1.5",
     "knex": "^0.19.1",
     "pg": "^7.12.0",
     "serve-favicon": "^2.5.0",
     "sqlite3": "^4.0.9",
-    "ws": "^7.1.1",
-    "dotenv": "latest"
+    "ws": "^7.1.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

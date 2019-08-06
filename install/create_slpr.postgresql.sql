@@ -12,7 +12,6 @@ SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
@@ -22,12 +21,43 @@ SET default_tablespace = '';
 
 SET default_with_oids = false;
 
---
--- TOC entry 207 (class 1259 OID 33056)
--- Name: candidates; Type: TABLE; Schema: public; Owner: postgres
---
 
-CREATE TABLE public.candidates (
+create table client.info
+(
+    filedate timestamp default CURRENT_TIMESTAMP not null,
+    id serial not null
+        constraint info_pk
+            primary key,
+    nome varchar(255) not null
+);
+
+alter table client.info owner to postgres;
+
+create unique index info_id_uindex
+    on client.info (id);
+
+
+
+create table client.site
+(
+    clientid integer
+        constraint site_info_fk
+            references client.info
+            on update cascade on delete cascade,
+    id serial not null
+        constraint site_pk
+            primary key
+);
+
+alter table client.site owner to postgres;
+
+create unique index site_id_uindex
+    on client.site (id);
+
+
+
+
+CREATE TABLE jobs.candidates (
     id integer NOT NULL,
     results bigint,
     plate character varying(20),
@@ -36,14 +66,14 @@ CREATE TABLE public.candidates (
 );
 
 
-ALTER TABLE public.candidates OWNER TO postgres;
+ALTER TABLE jobs.candidates OWNER TO postgres;
 
 --
 -- TOC entry 206 (class 1259 OID 33054)
 -- Name: candidates_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE public.candidates_id_seq
+CREATE SEQUENCE jobs.candidates_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -52,7 +82,7 @@ CREATE SEQUENCE public.candidates_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.candidates_id_seq OWNER TO postgres;
+ALTER TABLE jobs.candidates_id_seq OWNER TO postgres;
 
 --
 -- TOC entry 3182 (class 0 OID 0)
@@ -60,7 +90,7 @@ ALTER TABLE public.candidates_id_seq OWNER TO postgres;
 -- Name: candidates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.candidates_id_seq OWNED BY public.candidates.id;
+ALTER SEQUENCE jobs.candidates_id_seq OWNED BY jobs.candidates.id;
 
 
 --
@@ -68,7 +98,7 @@ ALTER SEQUENCE public.candidates_id_seq OWNED BY public.candidates.id;
 -- Name: coordinates; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.coordinates (
+CREATE TABLE jobs.coordinates (
     id integer NOT NULL,
     results bigint,
     x integer,
@@ -76,14 +106,14 @@ CREATE TABLE public.coordinates (
 );
 
 
-ALTER TABLE public.coordinates OWNER TO postgres;
+ALTER TABLE jobs.coordinates OWNER TO postgres;
 
 --
 -- TOC entry 204 (class 1259 OID 33041)
 -- Name: coordinates_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE public.coordinates_id_seq
+CREATE SEQUENCE jobs.coordinates_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -92,7 +122,7 @@ CREATE SEQUENCE public.coordinates_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.coordinates_id_seq OWNER TO postgres;
+ALTER TABLE jobs.coordinates_id_seq OWNER TO postgres;
 
 --
 -- TOC entry 3183 (class 0 OID 0)
@@ -100,7 +130,7 @@ ALTER TABLE public.coordinates_id_seq OWNER TO postgres;
 -- Name: coordinates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.coordinates_id_seq OWNED BY public.coordinates.id;
+ALTER SEQUENCE jobs.coordinates_id_seq OWNED BY jobs.coordinates.id;
 
 
 --
@@ -108,30 +138,37 @@ ALTER SEQUENCE public.coordinates_id_seq OWNED BY public.coordinates.id;
 -- Name: job; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.job (
-    filedate timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    id bigint NOT NULL,
-    version character varying(50),
-    data_type character varying(50),
+create table jobs.job
+(
+    filedate timestamp default CURRENT_TIMESTAMP not null,
+    id bigserial not null
+        constraint jobs_pk
+            primary key,
+    version varchar(50),
+    data_type varchar(50),
     epoch_time real,
     img_width integer,
     img_height integer,
     processing_time_ms real,
-    uuid character varying(50),
+    uuid varchar(50),
     camera_id integer,
-    site_id character varying(50),
-    company_id character varying(50)
+    site_id integer
+        constraint job_site__fk
+            references client.site
+            on update cascade on delete cascade,
+    company_id integer
 );
 
+alter table jobs.job owner to postgres;
 
-ALTER TABLE public.job OWNER TO postgres;
+ALTER TABLE jobs.job OWNER TO postgres;
 
 --
 -- TOC entry 200 (class 1259 OID 32986)
 -- Name: jobs_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE public.jobs_id_seq
+CREATE SEQUENCE jobs.jobs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -139,7 +176,7 @@ CREATE SEQUENCE public.jobs_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.jobs_id_seq OWNER TO postgres;
+ALTER TABLE jobs.jobs_id_seq OWNER TO postgres;
 
 --
 -- TOC entry 3184 (class 0 OID 0)
@@ -147,7 +184,7 @@ ALTER TABLE public.jobs_id_seq OWNER TO postgres;
 -- Name: jobs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.jobs_id_seq OWNED BY public.job.id;
+ALTER SEQUENCE jobs.jobs_id_seq OWNED BY jobs.job.id;
 
 
 --
@@ -155,7 +192,7 @@ ALTER SEQUENCE public.jobs_id_seq OWNED BY public.job.id;
 -- Name: regions; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.regions (
+CREATE TABLE jobs.regions (
     id integer NOT NULL,
     job bigint,
     x integer,
@@ -165,14 +202,14 @@ CREATE TABLE public.regions (
 );
 
 
-ALTER TABLE public.regions OWNER TO postgres;
+ALTER TABLE jobs.regions OWNER TO postgres;
 
 --
 -- TOC entry 202 (class 1259 OID 33019)
 -- Name: regions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE public.regions_id_seq
+CREATE SEQUENCE jobs.regions_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -181,7 +218,7 @@ CREATE SEQUENCE public.regions_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.regions_id_seq OWNER TO postgres;
+ALTER TABLE jobs.regions_id_seq OWNER TO postgres;
 
 --
 -- TOC entry 3185 (class 0 OID 0)
@@ -189,7 +226,7 @@ ALTER TABLE public.regions_id_seq OWNER TO postgres;
 -- Name: regions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.regions_id_seq OWNED BY public.regions.id;
+ALTER SEQUENCE jobs.regions_id_seq OWNED BY jobs.regions.id;
 
 
 --
@@ -197,7 +234,7 @@ ALTER SEQUENCE public.regions_id_seq OWNED BY public.regions.id;
 -- Name: results; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.results (
+CREATE TABLE jobs.results (
     filedate timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     id integer NOT NULL,
     job bigint,
@@ -212,14 +249,14 @@ CREATE TABLE public.results (
 );
 
 
-ALTER TABLE public.results OWNER TO postgres;
+ALTER TABLE jobs.results OWNER TO postgres;
 
 --
 -- TOC entry 198 (class 1259 OID 32972)
 -- Name: results_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE public.results_id_seq
+CREATE SEQUENCE jobs.results_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -228,7 +265,7 @@ CREATE SEQUENCE public.results_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.results_id_seq OWNER TO postgres;
+ALTER TABLE jobs.results_id_seq OWNER TO postgres;
 
 --
 -- TOC entry 3186 (class 0 OID 0)
@@ -236,58 +273,7 @@ ALTER TABLE public.results_id_seq OWNER TO postgres;
 -- Name: results_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-ALTER SEQUENCE public.results_id_seq OWNED BY public.results.id;
-
-
---
--- TOC entry 197 (class 1259 OID 32956)
--- Name: trace; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.trace (
-    filedate timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    id integer NOT NULL,
-    epoch_time real,
-    camera_id integer,
-    company_id character varying(50),
-    site_id character varying(50),
-    uuid character varying(50),
-    confidence real,
-    plate character varying,
-    processing_time_ms real,
-    data_type character varying(50),
-    img_height integer,
-    img_width integer,
-    regions_of_interest character varying,
-    version character varying(50)
-);
-
-
-ALTER TABLE public.trace OWNER TO postgres;
-
---
--- TOC entry 196 (class 1259 OID 32954)
--- Name: trace_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.trace_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.trace_id_seq OWNER TO postgres;
-
---
--- TOC entry 3187 (class 0 OID 0)
--- Dependencies: 196
--- Name: trace_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.trace_id_seq OWNED BY public.trace.id;
+ALTER SEQUENCE jobs.results_id_seq OWNED BY jobs.results.id;
 
 
 --
@@ -295,7 +281,7 @@ ALTER SEQUENCE public.trace_id_seq OWNED BY public.trace.id;
 -- Name: candidates id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.candidates ALTER COLUMN id SET DEFAULT nextval('public.candidates_id_seq'::regclass);
+ALTER TABLE ONLY jobs.candidates ALTER COLUMN id SET DEFAULT nextval('jobs.candidates_id_seq'::regclass);
 
 
 --
@@ -303,7 +289,7 @@ ALTER TABLE ONLY public.candidates ALTER COLUMN id SET DEFAULT nextval('public.c
 -- Name: coordinates id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.coordinates ALTER COLUMN id SET DEFAULT nextval('public.coordinates_id_seq'::regclass);
+ALTER TABLE ONLY jobs.coordinates ALTER COLUMN id SET DEFAULT nextval('jobs.coordinates_id_seq'::regclass);
 
 
 --
@@ -311,7 +297,7 @@ ALTER TABLE ONLY public.coordinates ALTER COLUMN id SET DEFAULT nextval('public.
 -- Name: job id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.job ALTER COLUMN id SET DEFAULT nextval('public.jobs_id_seq'::regclass);
+ALTER TABLE ONLY jobs.job ALTER COLUMN id SET DEFAULT nextval('jobs.jobs_id_seq'::regclass);
 
 
 --
@@ -319,7 +305,7 @@ ALTER TABLE ONLY public.job ALTER COLUMN id SET DEFAULT nextval('public.jobs_id_
 -- Name: regions id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.regions ALTER COLUMN id SET DEFAULT nextval('public.regions_id_seq'::regclass);
+ALTER TABLE ONLY jobs.regions ALTER COLUMN id SET DEFAULT nextval('jobs.regions_id_seq'::regclass);
 
 
 --
@@ -327,15 +313,7 @@ ALTER TABLE ONLY public.regions ALTER COLUMN id SET DEFAULT nextval('public.regi
 -- Name: results id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.results ALTER COLUMN id SET DEFAULT nextval('public.results_id_seq'::regclass);
-
-
---
--- TOC entry 3034 (class 2604 OID 32960)
--- Name: trace id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.trace ALTER COLUMN id SET DEFAULT nextval('public.trace_id_seq'::regclass);
+ALTER TABLE ONLY jobs.results ALTER COLUMN id SET DEFAULT nextval('jobs.results_id_seq'::regclass);
 
 
 --
@@ -343,7 +321,7 @@ ALTER TABLE ONLY public.trace ALTER COLUMN id SET DEFAULT nextval('public.trace_
 -- Name: candidates candidates_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.candidates
+ALTER TABLE ONLY jobs.candidates
     ADD CONSTRAINT candidates_pk PRIMARY KEY (id);
 
 
@@ -352,7 +330,7 @@ ALTER TABLE ONLY public.candidates
 -- Name: coordinates coordinates_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.coordinates
+ALTER TABLE ONLY jobs.coordinates
     ADD CONSTRAINT coordinates_pk PRIMARY KEY (id);
 
 
@@ -361,7 +339,7 @@ ALTER TABLE ONLY public.coordinates
 -- Name: job jobs_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.job
+ALTER TABLE ONLY jobs.job
     ADD CONSTRAINT jobs_pk PRIMARY KEY (id);
 
 
@@ -370,7 +348,7 @@ ALTER TABLE ONLY public.job
 -- Name: regions regions_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.regions
+ALTER TABLE ONLY jobs.regions
     ADD CONSTRAINT regions_pk PRIMARY KEY (id);
 
 
@@ -379,7 +357,7 @@ ALTER TABLE ONLY public.regions
 -- Name: results results_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.results
+ALTER TABLE ONLY jobs.results
     ADD CONSTRAINT results_pk PRIMARY KEY (id);
 
 
@@ -388,8 +366,8 @@ ALTER TABLE ONLY public.results
 -- Name: candidates foreignkey_candidates_results; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.candidates
-    ADD CONSTRAINT foreignkey_candidates_results FOREIGN KEY (results) REFERENCES public.results(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY jobs.candidates
+    ADD CONSTRAINT foreignkey_candidates_results FOREIGN KEY (results) REFERENCES jobs.results(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -397,8 +375,8 @@ ALTER TABLE ONLY public.candidates
 -- Name: coordinates foreignkey_coordinates_results; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.coordinates
-    ADD CONSTRAINT foreignkey_coordinates_results FOREIGN KEY (results) REFERENCES public.results(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY jobs.coordinates
+    ADD CONSTRAINT foreignkey_coordinates_results FOREIGN KEY (results) REFERENCES jobs.results(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -406,8 +384,8 @@ ALTER TABLE ONLY public.coordinates
 -- Name: regions foreignkey_regions_jobs; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.regions
-    ADD CONSTRAINT foreignkey_regions_jobs FOREIGN KEY (job) REFERENCES public.job(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY jobs.regions
+    ADD CONSTRAINT foreignkey_regions_jobs FOREIGN KEY (job) REFERENCES jobs.job(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -415,8 +393,8 @@ ALTER TABLE ONLY public.regions
 -- Name: results foreignkey_results_jobs; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.results
-    ADD CONSTRAINT foreignkey_results_jobs FOREIGN KEY (job) REFERENCES public.job(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY jobs.results
+    ADD CONSTRAINT foreignkey_results_jobs FOREIGN KEY (job) REFERENCES jobs.job(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 -- Completed on 2019-08-04 10:28:39 -03
