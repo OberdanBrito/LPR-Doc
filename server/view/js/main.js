@@ -53,7 +53,7 @@ dhtmlxEvent(window, "load", function () {
         hist.push(data);
         list.add(data, 0);
 
-        layout.cells('b').attachURL('../storage/' + data.uuid, false, false);
+        layout.cells('b').attachURL('../../storage/' + data.uuid + '.jpg', false, false);
 
         list.attachEvent("onItemClick", function (id) {
             hist.filter(function (item) {

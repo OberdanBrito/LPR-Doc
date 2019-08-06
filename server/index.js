@@ -44,6 +44,7 @@ wss.on('connection', function connection(ws) {
 app.post('/', (request, response) => {
 
     response.status(200).send();
+    send_ws_clients(request);
     insert_job(request);
     
 });
@@ -155,15 +156,16 @@ function insert_regions(regions) {
 function send_ws_clients(request) {
 
     wss.clients.forEach(function (client) {
-
-        client.send(JSON.stringify({
-            id: request.body.epoch_time,
-            filedate: new Date().toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"}),
-            camera_id: request.body.camera_id,
-            plate: results.plate,
-            confidence: results.confidence,
-            uuid:request.body.uuid
-        }));
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify({
+                id: request.body.epoch_time,
+                filedate: new Date().toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"}),
+                camera_id: request.body.camera_id,
+                plate: request.body.results[0].plate,
+                confidence: request.body.results[0].confidence,
+                uuid: request.body.uuid
+            }));
+        }
     });
     
 }
@@ -175,7 +177,10 @@ function show_plate(result) {
         plate
     } = result[0];
 
-    let cor = '\x1b[32m%s\x1b[0m', amarelo = '\x1b[33m%s\x1b[0m', vermelho = '\x1b[31m%s\x1b[0m';
+    let
+        cor = '\x1b[32m%s\x1b[0m',
+        amarelo = '\x1b[33m%s\x1b[0m',
+        vermelho = '\x1b[31m%s\x1b[0m';
     
     if (confidence < 88) {
         cor = amarelo;
