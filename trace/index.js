@@ -24,7 +24,7 @@ const db = require('knex')({
 });
 
 app.listen(port, () => {
-    console.log(`Serviço de identificação LPR executando na porta ${port}.`)
+    console.log(`Serviço LPR Trace executando na porta ${port}.`)
 });
 
 const WebSocket = require('ws');
